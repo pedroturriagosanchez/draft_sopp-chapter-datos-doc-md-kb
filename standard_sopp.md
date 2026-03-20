@@ -1,40 +1,42 @@
 # Pragma Knowledge: Estándar Global de Gestión de Conocimiento
 
-[1. Propósito y Visión Estratégica](#1.-propósito-y-visión-estratégica)
+[1. Propósito y Visión Estratégica](#1-propósito-y-visión-estratégica)
+[1.1. Las 5 Reglas de Oro (Innegociables)](#11-las-5-reglas-de-oro-innegociables)
 
-[1.1. Las 5 Reglas de Oro (Innegociables)](#1.1.-las-5-reglas-de-oro-\(innegociables\))
 
-[2. Arquitectura del árbol de directorios](#2.-arquitectura-del-árbol-de-directorios)
+[2. Arquitectura del árbol de directorios](#2-arquitectura-del-árbol-de-directorios)
+[2.1. Datos propios del modelo](#21-datos-propios-del-modelo)
+[2.2. Reglas y Contextos de Negocio](#22-reglas-y-contextos-de-negocio)
+[2.2.1. Reglas Organizacionales (organizational-rules/)](#221-reglas-organizacionales-organizational-rules)
+[2.2.2. Dominios de Negocio (business-domain/)](#222-dominios-de-negocio-business-domain)
+[2.3. Conocimiento específico de Pragma (chapters)](#23-conocimiento-específico-de-pragma-chapters)
+[2.3.1. Arquetipo de Repositorio del Chapter](#231-arquetipo-de-repositorio-del-chapter)
+[2.3.1.1. Estructura Raíz del Repositorio](#2311-estructura-raíz-del-repositorio)
+[2.3.1.2. El archivo README.md](#2312-el-archivo-readmemd)
+[2.3.1.3. El directorio kb/ (Knowledge Base)](#2313-el-directorio-kb-knowledge-base)
+[2.3.1.4. Subdirectorios Tecnológicos (Organización Interna)](#2314-subdirectorios-tecnológicos-organización-interna)
 
-[2.1. Datos propios del modelo](#2.1.-datos-propios-del-modelo)
-[2.2. Reglas y Contextos de Negocio](#2.2.-reglas-y-contextos-de-negocio)
-[2.2.1. Reglas Organizacionales (organizational-rules/)](#2.2.1.-reglas-organizacionales-\(organizational-rules/\))
-[2.2.2. Dominios de Negocio (business-domain/)](#2.2.2.-dominios-de-negocio-\(business-domain/\))
-[2.3. Conocimiento específico de Pragma (chapters)](#2.3.-conocimiento-específico-de-pragma-\(chapters\))
-[2.3.1. Arquetipo de Repositorio del Chapter](#2.3.1.-arquetipo-de-repositorio-del-chapter)
-[2.3.1.1. Estructura Raíz del Repositorio](#2.3.1.1.-estructura-raíz-del-repositorio)
-[2.3.1.2. El archivo README.md](#2.3.1.2.-el-archivo-readme.md)
-[2.3.1.3. El directorio kb/ (Knowledge Base)](#2.3.1.3.-el-directorio-kb/-\(knowledge-base\))
-[2.3.1.4. Subdirectorios Tecnológicos (Organización Interna)](#2.3.1.4.-subdirectorios-tecnológicos-\(organización-interna\))
-[Requisitos de Cumplimiento:](#requisitos-de-cumplimiento:)
+
+[Requisitos de Cumplimiento:](#requisitos-de-cumplimiento)
 [Ejemplo de Estructura Aceptada](#ejemplo-de-estructura-aceptada)
-[2.3.1.5. Especificaciones o particularidades de clientes (directorio clients)](#2.3.1.5.-especificaciones-o-particularidades-de-clientes-\(directorio-clients\))
-[2.3.2. Modelo de Trabajo y Gobernanza](#2.3.2.-modelo-de-trabajo-y-gobernanza)
-[2.3.2.1. Flujo de Control de Versiones: Trunk-Based Development (TBD)](#2.3.2.1.-flujo-de-control-de-versiones:-trunk-based-development-\(tbd\))
-[2.3.2.2. Proceso de Integración (Merge Requests)](#2.3.2.2.-proceso-de-integración-\(merge-requests\))
-[2.3.3. Future Journey (Evolución del Repositorio)](#2.3.3.-future-journey-\(evolución-del-repositorio\))
-[2.3.3.1. Validación Automatizada (Sustitución del Encargado de Formato)](#2.3.3.1.-validación-automatizada-\(sustitución-del-encargado-de-formato\))
-[2.3.3.2. Sincronización Continua con S3 y la IA (Deploy Pipeline)](#2.3.3.2.-sincronización-continua-con-s3-y-la-ia-\(deploy-pipeline\))
+[2.3.1.5. Especificaciones o particularidades de clientes (directorio clients)](#2315-especificaciones-o-particularidades-de-clientes-directorio-clients)
+[2.3.2. Modelo de Trabajo y Gobernanza](#232-modelo-de-trabajo-y-gobernanza)
+[2.3.2.1. Flujo de Control de Versiones: Trunk-Based Development (TBD)](#2321-flujo-de-control-de-versiones-trunk-based-development-tbd)
+[2.3.2.2. Proceso de Integración (Merge Requests)](#2322-proceso-de-integración-merge-requests)
+[2.3.3. Future Journey (Evolución del Repositorio)](#233-future-journey-evolución-del-repositorio)
+[2.3.3.1. Validación Automatizada (Sustitución del Encargado de Formato)](#2331-validación-automatizada-sustitución-del-encargado-de-formato)
+[2.3.3.2. Sincronización Continua con S3 y la IA (Deploy Pipeline)](#2332-sincronización-continua-con-s3-y-la-ia-deploy-pipeline)
 
-[3. Plantillas de archivos para el árbol de directorios](#3.-plantillas-de-archivos-para-el-árbol-de-directorios)
-[3.1. Plantillas de los Chapters](#3.1.-plantillas-de-los-chapters)
-[3.1.1. La Perspectiva (perspective.md)](#heading=)
-[3.1.2. Decisiones (decisions/000-decision-name.md)](#3.1.2.-decisiones-\(decisions/000-decision-name.md\))
-[3.1.3. Límites (limits/limit-name.md)](#heading=)
-[3.1.4. Referencias (references/reference-name.md)](#heading=)
-[3.1.5. Soluciones de Negocio (business-solutions/)](#3.1.5.-soluciones-de-negocio-\(business-solutions/\))
-[3.1.5.1. Jobs To Be Done (standard/hitos/hito-title.md)](#3.1.5.1.-jobs-to-be-done-\(standard/jtbd/jtbd-title.md\))
-[3.1.5.2. Generables / Entregables (outputs/output-title.md)](#3.1.5.2.-generables-/-entregables-\(standard/outputs/output-title.md\))
+
+[3. Plantillas de archivos para el árbol de directorios](#3-plantillas-de-archivos-para-el-árbol-de-directorios)
+[3.1. Plantillas de los Chapters](#31-plantillas-de-los-chapters)
+[3.1.1. La Perspectiva (perspective.md)](#311-la-perspectiva-perspectivemd)
+[3.1.2. Decisiones (decisions/000-decision-name.md)](#312-decisiones-decisions000-decision-namemd)
+[3.1.3. Límites (limits/limit-name.md)](#313-límites-limitslimit-namemd)
+[3.1.4. Referencias (references/reference-name.md)](#314-referencias-referencesreference-namemd)
+[3.1.5. Soluciones de Negocio (business-solutions/)](#315-soluciones-de-negocio-business-solutions)
+[3.1.5.1. Jobs To Be Done (standard/hitos/hito-title.md)](#3151-jobs-to-be-done-standardhitoshito-titlemd)
+[3.1.5.2. Generables / Entregables (outputs/output-title.md)](#3152-generables-entregables-outputsoutput-titlemd)
 
 # 1. Propósito y Visión Estratégica
 
@@ -160,7 +162,7 @@ Para mejorar la navegabilidad y la organización del conocimiento de un Chapter 
 * Todos los nuevos subdirectorios deben nombrar la tecnología o el dominio que agrupan (ej. java, dot-net, mobile-ios).  
 * Se debe adherir estrictamente a la **nomenclatura definida**.
 
-##### ##### *Ejemplo de Estructura Aceptada*
+##### *Ejemplo de Estructura Aceptada*
 
 La estructura aceptada se ve de la siguiente manera, tomando como ejemplo el *chapter* de backend:
 
