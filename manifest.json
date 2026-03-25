@@ -1,0 +1,14 @@
+{
+  "name": "pragma-knowledge",
+  "version": "1.0.0",
+  "description": "Índice y metadatos dinámicos del repositorio de conocimiento global de Pragma",
+  "last_updated": "",
+  "chapters": [
+    "chapter-datos"
+  ],
+  "business_domains": [
+    "banking",
+    "retail",
+    "cross-cutting"
+  ]
+}
