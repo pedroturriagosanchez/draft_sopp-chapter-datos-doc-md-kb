@@ -193,16 +193,6 @@ El **Chapter de Datos** lidera end-to-end esta solución:
 - **Chapter de Data Science:** Consume los datos Bronze generados para entrenamiento de modelos. Punto de interacción: definición de requisitos de calidad para evitar Silent Drift en modelos de ML.
 - **Chapter de Data Analytics:** Consume los datos Bronze para analítica descriptiva. Punto de interacción: validación de que el esquema Bronze es adecuado para las consultas analíticas previstas.
 
-## Referencias relacionadas
-
-- JTBD base (versión simplificada): [[business-solutions/standard/jtbd/bronze-ingestion-agent.md]]
-- Límites conocidos del agente: [[limits/schema-drift-and-known-failures.md]]
-- Guía procedimental de ejecución: [[references/bronze-ingestion-procedural-guide.md]]
-- Decisión de estándares Bronze: [[decisions/001-bronze-layer-standards.md]]
-- Decisión de Arquitectura Hexagonal: [[decisions/002-hexagonal-architecture.md]]
-- Convenciones de nomenclatura SOPP: [[references/sopp-naming-conventions.md]]
-
-
 ## Modelado Económico — ROI y COCOMO III
 
 La implementación del agente no es un fin en sí mismo, sino una palanca financiera. El Chapter de Datos debe documentar el impacto económico de cada despliegue usando el modelo COCOMO III.
@@ -274,3 +264,12 @@ El Chapter de Datos debe anticipar las siguientes tendencias que impactarán la 
 | Quantum Computing | Impacto futuro en procesamiento masivo de datos | Monitorear evolución para casos de uso de optimización |
 
 **Empresas que automatizan gestión de datos para 2026:** El 78% de empresas en eCommerce planea automatizar la gestión de inventarios y datos para evitar pérdidas por falta de información en tiempo real. Las empresas que usan análisis avanzado para optimizar sus lead times reducen costos operativos hasta en un 20%.
+
+## Referencias relacionadas
+
+- JTBD base (versión simplificada): [[business-solutions/standard/jtbd/bronze-ingestion-agent.md]]
+- Límites conocidos del agente: [[limits/schema-drift-and-known-failures.md]]
+- Guía procedimental de ejecución: [[references/bronze-ingestion-procedural-guide.md]]
+- Decisión de estándares Bronze: [[decisions/001-bronze-layer-standards.md]]
+- Decisión de Arquitectura Hexagonal: [[decisions/002-hexagonal-architecture.md]]
+- Convenciones de nomenclatura SOPP: [[references/sopp-naming-conventions.md]]

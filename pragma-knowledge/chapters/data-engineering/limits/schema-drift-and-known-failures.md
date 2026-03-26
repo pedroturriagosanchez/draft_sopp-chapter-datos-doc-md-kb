@@ -140,16 +140,6 @@ El agente genera código con configuraciones de seguridad estándar (encriptaci�
 
 ---
 
-## Referencias Relacionadas
-
-- JTBD del agente: [[business-solutions/standard/jtbd/bronze-ingestion-agent.md]]
-- JTBD avanzado (Pre-Act + MLOps 2.0): [[business-solutions/standard/jtbd/ai-agent-bronze-ingestion-advanced.md]]
-- Guía procedimental de ejecución: [[references/bronze-ingestion-procedural-guide.md]]
-- Decisión de estándares Bronze: [[decisions/001-bronze-layer-standards.md]]
-- Convenciones de nomenclatura SOPP: [[references/sopp-naming-conventions.md]]
-
----
-
 ## Límite 7: Alucinaciones del LLM — Código Sintácticamente Correcto pero Lógicamente Incorrecto
 
 ### La Restricción

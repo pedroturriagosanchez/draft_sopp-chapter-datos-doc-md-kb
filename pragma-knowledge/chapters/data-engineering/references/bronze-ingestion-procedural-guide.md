@@ -157,7 +157,7 @@ El agente ejecuta las **4 Puertas de Calidad MLOps 2.0** sobre el código y los 
 **4.3. Validación Temporal (Severidad: AUDIT)**
 - Verifica el orden cronológico de los registros.
 - Detecta "fugas temporales" (temporal leakage): registros con fechas futuras que podrían contaminar modelos de ML.
-- Verifica la frescura de los datos: alerta si los datos tienen más de N días de antigüedad respecto a la fecha esperada.
+- Verifica la frescura de los datos: alerta si los datos tienen más de 24 horas de antigüedad respecto a la fecha esperada (T < 24h).
 - Resultado: registro en tablero de gobernanza sin bloquear el pipeline.
 
 **4.4. Validación Distribucional (Severidad: WARN)**
