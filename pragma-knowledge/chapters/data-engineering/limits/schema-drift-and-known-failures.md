@@ -147,3 +147,88 @@ El agente genera código con configuraciones de seguridad estándar (encriptaci�
 - Guía procedimental de ejecución: [[references/bronze-ingestion-procedural-guide.md]]
 - Decisión de estándares Bronze: [[decisions/001-bronze-layer-standards.md]]
 - Convenciones de nomenclatura SOPP: [[references/sopp-naming-conventions.md]]
+
+---
+
+## Límite 7: Alucinaciones del LLM — Código Sintácticamente Correcto pero Lógicamente Incorrecto
+
+### La Restricción
+Los modelos de lenguaje (LLMs) pueden generar código PySpark que supera la validación sintáctica pero contiene errores de lógica de negocio: joins incorrectos, filtros invertidos, agregaciones sobre columnas equivocadas, o condiciones de validación que nunca se activan. Este tipo de error es el más peligroso porque no genera excepciones en tiempo de ejecución — produce resultados silenciosamente incorrectos en la capa Bronze.
+
+La técnica de detección mediante **logprobs** (probabilidades logarítmicas de los tokens generados) permite identificar segmentos de baja confianza en el código generado. Un token con logprob < -2.0 indica alta incertidumbre del modelo y es una señal de posible alucinación.
+
+### Evidencia e Impacto
+- Un agente puede generar una condición de filtro `WHERE fecha > '2026-01-01'` cuando la intención era `WHERE fecha < '2026-01-01'`, produciendo un dataset vacío o incompleto sin error visible.
+- Joins con columnas de nombres similares pero semánticamente distintos (ej. `customer_id` vs `client_id`) pueden generar productos cartesianos silenciosos que inflan el volumen de datos en Bronze.
+- La degradación de modelos de ML entrenados sobre datos Bronze con alucinaciones puede ser irreversible si no se detecta antes del entrenamiento.
+
+### Señales de Alerta
+- Segmentos de código con logprob promedio < -2.0 en el análisis de confianza del agente.
+- Volumen de registros en Bronze significativamente diferente al esperado (> 20% de variación).
+- Columnas de auditoría con valores inconsistentes entre ejecuciones del mismo pipeline.
+- El agente activa el ciclo de Reflexión (Reflection) más de 2 veces en la misma generación.
+
+### Workarounds y Mitigaciones
+1. **Análisis de logprobs obligatorio:** Configurar el agente para rechazar automáticamente cualquier fragmento de código con logprob promedio < -2.0 y activar el ciclo de Reflexión.
+2. **Revisión humana de secciones de baja confianza:** El reporte de validación debe destacar explícitamente los segmentos marcados como inciertos para revisión prioritaria del Data Engineer.
+3. **Tests de contrato de datos:** Implementar pruebas que validen el volumen esperado de registros, la distribución de valores clave y la ausencia de duplicados antes de aprobar el pipeline.
+4. **Inyección de Dependencias para intercambio de modelos:** Si un modelo genera alucinaciones frecuentes en un dominio específico, el patrón de Inyección de Dependencias permite intercambiarlo por un modelo más especializado sin reescribir la lógica de orquestación.
+
+---
+
+## Límite 8: Uso de Modelos de Lenguaje Pequeños (SLM) en Edge Computing
+
+### La Restricción
+Para operaciones a gran escala o en entornos de Edge Computing (procesamiento en el borde, cerca de la fuente de datos), el uso de modelos LLM masivos es costoso e ineficiente. Los modelos grandes requieren infraestructura de GPU de alto costo y latencias de inferencia que pueden superar los SLAs de ingesta en tiempo real.
+
+La cuantización de 4 bits permite ejecutar Modelos de Lenguaje Pequeños (SLM) con una fracción de la memoria y el costo, pero introduce una degradación de precisión que puede ser crítica para tareas complejas de inferencia de esquema o generación de lógica de negocio.
+
+### Evidencia e Impacto
+- Un modelo cuantizado a 4 bits puede reducir el uso de memoria en un 75% pero incrementar la tasa de errores de inferencia de esquema en un 15-20% para archivos con tipos de datos ambiguos.
+- En entornos de Edge Computing con conectividad limitada, la latencia de llamadas a APIs de LLMs externos puede superar los 30 segundos, bloqueando pipelines de ingesta en tiempo real.
+- La destilación de conocimiento de modelos grandes a SLMs requiere datasets de fine-tuning específicos del dominio de datos que Pragma debe construir y mantener.
+
+### Señales de Alerta
+- Costo mensual de inferencia del agente supera el 10% del costo total del proyecto de datos.
+- Latencia de generación de esquema > 60 segundos para archivos < 100MB.
+- Tasa de errores de inferencia de esquema > 5% en producción.
+
+### Workarounds y Mitigaciones
+1. **Estrategia de modelos por complejidad:** Usar SLMs cuantizados para tareas simples (inferencia de tipos básicos, generación de DDL estándar) y modelos grandes solo para casos complejos (archivos anidados, lógica de negocio compleja).
+2. **Caché de esquemas:** Almacenar esquemas inferidos previamente para fuentes recurrentes, evitando re-inferencia costosa en cada ejecución.
+3. **Fine-tuning con datos de Pragma:** Construir un dataset de fine-tuning con ejemplos reales de inferencia de esquema de proyectos de Pragma para mejorar la precisión de los SLMs en el dominio específico.
+
+---
+
+## Límite 9: Integración con la Capa Nexo del SOPP y Model Context Protocol (MCP)
+
+### La Restricción
+El agente opera dentro del ecosistema SOPP, donde la **Capa Nexo** actúa como el DataLake inteligente que centraliza la información a través de herramientas y agentes. La integración incorrecta con Nexo puede generar inconsistencias en el seguimiento de latencias, errores y consumo de tokens por cliente, afectando la sostenibilidad financiera del servicio.
+
+El **Model Context Protocol (MCP)** estandariza cómo los agentes acceden a herramientas externas. Una implementación incorrecta de MCP puede exponer la lógica central del agente a detalles técnicos de bajo nivel, violando el principio de desacoplamiento de la Arquitectura Hexagonal.
+
+### Evidencia e Impacto
+- Sin integración correcta con Nexo, el consumo de tokens por cliente no se registra, imposibilitando la facturación granular y el análisis de ROI por proyecto.
+- Una implementación de MCP sin versionado puede romper la compatibilidad del agente cuando se actualiza una herramienta externa (ej. cambio de API de AWS Glue).
+- La ausencia de observabilidad total en Nexo impide detectar cuellos de botella de latencia en el pipeline de ingesta.
+
+### Señales de Alerta
+- Métricas de consumo de tokens inconsistentes o ausentes en el dashboard de Nexo.
+- Errores de compatibilidad al actualizar versiones de herramientas MCP.
+- Latencias de pipeline no registradas en el sistema de observabilidad de Nexo.
+
+### Workarounds y Mitigaciones
+1. **Instrumentación obligatoria de Nexo:** Todo pipeline generado por el agente debe incluir hooks de telemetría para registrar latencias, errores y consumo de tokens en la Capa Nexo.
+2. **Versionado de contratos MCP:** Cada herramienta externa accedida por el agente debe tener un contrato MCP versionado para garantizar compatibilidad hacia atrás.
+3. **Dashboard de observabilidad:** Configurar un dashboard en Nexo con métricas de latencia, tasa de errores y consumo de tokens por cliente y por pipeline.
+
+---
+
+## Referencias Relacionadas (Actualizado)
+
+- JTBD del agente (versión base): [[business-solutions/standard/jtbd/bronze-ingestion-agent.md]]
+- JTBD avanzado (Pre-Act + MLOps 2.0): [[business-solutions/standard/jtbd/ai-agent-bronze-ingestion-advanced.md]]
+- Guía procedimental de ejecución: [[references/bronze-ingestion-procedural-guide.md]]
+- Decisión de estándares Bronze: [[decisions/001-bronze-layer-standards.md]]
+- Decisión de Arquitectura Hexagonal: [[decisions/002-hexagonal-architecture.md]]
+- Convenciones de nomenclatura SOPP: [[references/sopp-naming-conventions.md]]

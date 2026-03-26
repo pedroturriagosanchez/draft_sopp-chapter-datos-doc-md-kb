@@ -201,3 +201,76 @@ El **Chapter de Datos** lidera end-to-end esta solución:
 - Decisión de estándares Bronze: [[decisions/001-bronze-layer-standards.md]]
 - Decisión de Arquitectura Hexagonal: [[decisions/002-hexagonal-architecture.md]]
 - Convenciones de nomenclatura SOPP: [[references/sopp-naming-conventions.md]]
+
+
+## Modelado Económico — ROI y COCOMO III
+
+La implementación del agente no es un fin en sí mismo, sino una palanca financiera. El Chapter de Datos debe documentar el impacto económico de cada despliegue usando el modelo COCOMO III.
+
+### Parámetros de Estimación
+
+El modelo COCOMO (Constructive Cost Model) estima el costo de software basado en KLOC (miles de líneas de código) y multiplicadores de esfuerzo (EAF). El agente reduce el KLOC escrito por humanos en un **80%**, optimizando los siguientes conductores de costo:
+
+- **Menor complejidad del producto:** El código generado sigue patrones estándar (Arquitectura Hexagonal), reduciendo la complejidad percibida.
+- **Mayor capacidad del equipo:** Los Data Engineers liberados del Toil pueden enfocarse en tareas de mayor valor, mejorando la productividad efectiva del equipo.
+- **Reducción de deuda técnica:** El código generado sigue estándares de Clean Code y está documentado automáticamente, reduciendo el costo de mantenimiento futuro.
+
+### Fórmula de Ahorro Estimado
+
+```
+Horas ahorradas/mes = Fuentes nuevas/mes × Horas promedio/fuente × % reducción del agente
+Ejemplo: 10 fuentes × 10 horas × 80% = 80 horas/mes ahorradas
+
+Costo ahorrado/mes = 80 horas × tarifa hora Data Engineer
+ROI 3 años = (Costo ahorrado acumulado - Costo implementación agente) / Costo implementación agente
+```
+
+### Benchmarks de Mercado (2024-2026)
+
+| Herramienta / Plataforma | ROI Reportado (3 años) | Impacto en Ingeniería |
+|--------------------------|----------------------|----------------------|
+| Informatica Cloud | 328% | Reducción de complejidad de integración |
+| Snowflake AI Data Cloud | 354% | 50% menos esfuerzo; 75% más rápido Time-to-Insight |
+| AWS Glue (Migración) | 80% ahorro en costo | Reducción de $500 a $100 por TB procesado |
+| Agente Ingesta Bronze (SOPP) | > 70% ahorro horas-hombre | Eliminación del Toil en 80%; entrega < 5 días |
+
+---
+
+## Campos del JTBD Tracker — Registro Obligatorio
+
+Cada ejecución de este JTBD debe registrarse en el JTBD Tracker con los siguientes campos:
+
+| Campo | Descripción | Meta / Valor Esperado |
+|-------|-------------|----------------------|
+| `jtbd-file-name` | Nombre del archivo JTBD ejecutado | `ai-agent-bronze-ingestion-advanced.md` |
+| `Responsable` | Data Engineer que lidera la ejecución | [Nombre del responsable] |
+| `Estado` | Fase actual del JTBD | Propuesto / En Ejecución / Completado / Disponibilizado |
+| `Título del Job` | Nombre descriptivo del trabajo ejecutado | Ingestión Bronze para [nombre fuente] en [cliente] |
+| `Descripción y Valor de Negocio` | Problema resuelto y valor generado | Reducción de X horas a < 15 min de configuración |
+| `Entradas (Inputs)` | Recursos provistos para la ejecución | URI S3, muestra, contexto de negocio |
+| `Salidas (Outputs)` | Artefactos entregados | Script PySpark, DDL, Data Dictionary, contrato YAML |
+| `Dependencias` | Chapters y sistemas requeridos | Cloud (IAM), QA (reglas semánticas), Architecture |
+| `Arquitectura de referencia` | Patrón técnico utilizado | Arquitectura Hexagonal + Pre-Act + MLOps 2.0 |
+| `Especificaciones de capas adicionales para clientes` | Personalizaciones por cliente | KMS CMK, VPC Endpoints, regulaciones específicas |
+| `Cuentas impactando` | Clientes donde se desplegó | [Lista de clientes] |
+| `% de clientes que les serviría` | Cobertura potencial en portafolio Pragma | Estimado > 70% de clientes con Data Lake en S3 |
+| `Eficiencia Operativa` | Reducción de tiempo vs. fuerza bruta | > 70% (mínimo requerido: 50%) |
+| `Margen de rentabilidad` | Para proyectos desde cero | > 60% (calculado con COCOMO III) |
+| `Tiempo de entrega SOPP` | Días desde inicio hasta aprobación del cliente | < 5 días hábiles |
+| `Uso recurrente SOPP` | Data Engineers que usan el JTBD ≥ 1 vez/semana | Meta: ≥ 3 Data Engineers/semana |
+
+---
+
+## Tendencias 2026 — Evolución del JTBD
+
+El Chapter de Datos debe anticipar las siguientes tendencias que impactarán la evolución de este JTBD:
+
+| Tendencia 2026 | Impacto en el JTBD | Acción Recomendada |
+|----------------|-------------------|-------------------|
+| Real-time Data (Kafka/Flink) | El agente debe generar conectores CDC para fuentes en streaming | Desarrollar variante de JTBD para streaming CDC |
+| Data Mesh | Cada dominio de negocio será dueño de sus datos; el agente debe facilitar "Data Contracts" | Adaptar el agente para operar en entornos descentralizados |
+| Lakehouse Architecture | Convergencia de Data Warehouse y Data Lake; optimización de tablas Delta | Incluir generación de tablas Delta con linaje de datos |
+| SLM + Cuantización 4 bits | Modelos pequeños para reducir costos en clientes con alto volumen | Evaluar fine-tuning de SLMs con datos de Pragma |
+| Quantum Computing | Impacto futuro en procesamiento masivo de datos | Monitorear evolución para casos de uso de optimización |
+
+**Empresas que automatizan gestión de datos para 2026:** El 78% de empresas en eCommerce planea automatizar la gestión de inventarios y datos para evitar pérdidas por falta de información en tiempo real. Las empresas que usan análisis avanzado para optimizar sus lead times reducen costos operativos hasta en un 20%.

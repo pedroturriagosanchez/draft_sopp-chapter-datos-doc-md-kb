@@ -273,3 +273,116 @@ Formato obligatorio para tablas Bronze:
 - Patrón de Arquitectura Hexagonal (Puertos y Adaptadores): [[decisions/002-hexagonal-architecture.md]]
 - Estándares de la Capa Bronze: [[decisions/001-bronze-layer-standards.md]]
 - Límites conocidos del agente: [[limits/schema-drift-and-known-failures.md]]
+
+---
+
+## Sección Complementaria: Optimización del Agente y Técnicas Avanzadas
+
+### Optimización de Prompts e Inyección de Dependencias
+
+La eficiencia del agente se mejora mediante dos patrones técnicos que el Data Engineer debe conocer:
+
+**Optimización Automática de Prompts:**
+El agente ajusta sus prompts según las métricas de evaluación y el modelo específico utilizado. Si la tasa de errores de inferencia supera el 5%, el sistema activa un ciclo de optimización que refina las instrucciones del prompt para el tipo de archivo problemático. Este proceso es transparente para el Data Engineer pero debe monitorearse en el dashboard de Nexo.
+
+**Inyección de Dependencias para Modelos:**
+El agente implementa el patrón de Inyección de Dependencias para intercambiar modelos o herramientas sin reescribir la lógica de orquestación:
+```python
+# Ejemplo conceptual de inyección de dependencias
+class BronzeIngestionAgent:
+    def __init__(self, llm_provider, schema_validator, catalog_client):
+        self.llm = llm_provider          # GPT-4, Claude, Llama, etc.
+        self.validator = schema_validator # Deequ, Great Expectations
+        self.catalog = catalog_client    # Glue, Unity Catalog
+```
+Esto permite pasar de GPT-4 a Claude o a un modelo local pequeño (SLM) sin modificar la lógica de inferencia de esquema.
+
+---
+
+### Modelo de Severidad CDV (Continuous Data Validation) — Referencia Completa
+
+El agente opera bajo el siguiente modelo de severidad definido en la política de MLOps 2.0:
+
+| Puerta de Calidad | Criterio de Validación | Severidad | Acción del Agente |
+|-------------------|----------------------|-----------|-------------------|
+| Estructural | Cumplimiento de tipos y columnas en contrato YAML | **BLOCK** | Detiene el pipeline. No escribe datos en Bronze. |
+| Semántica (crítica) | Violación de regla de negocio en campo obligatorio | **BLOCK** | Detiene el pipeline. Genera reporte de error. |
+| Semántica (no crítica) | Violación de regla de negocio en campo opcional | **WARN** | Continúa. Registra en log de auditoría. |
+| Temporal | Orden cronológico, frescura, temporal leakage | **AUDIT** | Continúa. Registra en tablero de gobernanza. |
+| Distribucional | PSI > 0.2 o KS p-value < 0.05 | **WARN** | Continúa. Alerta al Data Engineer. |
+| Sintáctica del código | Logprob promedio < -2.0 en segmento generado | **REFLECTION** | Activa ciclo de auto-corrección del agente. |
+
+**Umbrales de referencia para validación distribucional:**
+- PSI < 0.1: Sin cambio significativo en la distribución. ✅
+- PSI 0.1 - 0.2: Cambio moderado. Monitorear. ⚠️
+- PSI > 0.2: Cambio significativo. Alerta de Schema Drift. 🚨
+- KS p-value > 0.05: Distribuciones estadísticamente similares. ✅
+- KS p-value < 0.05: Distribuciones estadísticamente diferentes. 🚨
+
+---
+
+### Integración con la Capa Nexo del SOPP
+
+La **Capa Nexo** es el DataLake inteligente del SOPP que centraliza la observabilidad de todos los agentes. Todo pipeline generado debe instrumentarse para reportar a Nexo:
+
+**Métricas obligatorias a registrar en Nexo:**
+- Latencia total del pipeline (desde inicio hasta escritura en Bronze).
+- Número de tokens consumidos por el LLM en la generación de artefactos.
+- Resultado de cada puerta de calidad (PASS/FAIL/WARN).
+- Volumen de registros procesados vs. rechazados.
+- Identificador del cliente para facturación granular.
+
+**Documentación bajo MCP (Model Context Protocol):**
+Las arquitecturas de pipeline deben documentarse bajo el protocolo MCP para que los agentes de IA puedan consultar definiciones estandarizadas y ejecutar tareas con mayor precisión. Esto incluye:
+- Definición de los puertos de entrada y salida del pipeline.
+- Contratos de datos en formato YAML versionado.
+- Políticas de calidad aplicables al pipeline.
+
+---
+
+### Modelado Económico — Estimación de ROI con COCOMO III
+
+Para proyectos que arrancan desde cero, el Data Engineer debe documentar el ROI estimado usando el modelo COCOMO III:
+
+**Parámetros clave:**
+- **KLOC reducido:** El agente reduce el KLOC escrito por humanos en un 80%, disminuyendo directamente el esfuerzo estimado.
+- **EAF (Effort Adjustment Factor):** Los multiplicadores de esfuerzo mejoran al eliminar el Toil: menor complejidad del producto, mayor capacidad del equipo.
+- **Meta de rentabilidad:** > 60% de margen en proyectos desde cero.
+
+**Fórmula de ahorro estimado:**
+```
+Horas ahorradas = (Fuentes nuevas/mes × Horas promedio/fuente) × % reducción del agente
+Ejemplo: 10 fuentes × 10 horas × 80% = 80 horas/mes ahorradas
+Costo ahorrado = 80 horas × tarifa hora Data Engineer
+```
+
+**Registro obligatorio en el JTBD Tracker:**
+Cada ejecución del agente debe registrar en el JTBD Tracker:
+- `jtbd-file-name`: nombre del archivo JTBD ejecutado.
+- `Responsable`: Data Engineer que ejecutó el JTBD.
+- `Estado`: Propuesto / En Ejecución / Completado / Disponibilizado.
+- `Cuentas impactando`: clientes donde se desplegó el pipeline.
+- `% de clientes que les serviría`: estimación de cobertura potencial en el portafolio de Pragma.
+- `Eficiencia Operativa`: reducción de tiempo comprobada vs. fuerza bruta (mínimo 50%).
+- `Margen de rentabilidad`: calculado con COCOMO III (meta > 60%).
+- `Tiempo de entrega SOPP`: días desde inicio hasta aprobación del cliente (meta < 5 días).
+- `Uso recurrente SOPP`: número de Data Engineers que usan el JTBD al menos una vez por semana.
+
+---
+
+### Tendencias 2026 — Evolución del Agente de Ingestión
+
+El Data Engineer debe estar preparado para adaptar el agente a las siguientes tendencias que impactarán la ingeniería de datos en 2026:
+
+| Tendencia | Impacto Tecnológico | Rol del Agente |
+|-----------|--------------------|--------------| 
+| Real-time Data | Kafka / Flink como protocolos estándar | Generación de conectores CDC automáticos |
+| Data Mesh | Propiedad de datos descentralizada | Agente como facilitador de "Data Contracts" entre dominios |
+| Lakehouse Architecture | Convergencia de Data Warehouse y Data Lake | Optimización de tablas Delta y linaje de datos |
+| Quantum Computing | Impacto futuro en procesamiento masivo | Monitoreo de algoritmos de optimización |
+| SLM + Cuantización | Modelos pequeños en Edge Computing | Inferencia de esquema de bajo costo en el borde |
+
+**Implicaciones para el Chapter de Datos:**
+- Preparar variantes del agente para streaming CDC (Kafka/Flink) como próximo JTBD prioritario.
+- Desarrollar capacidad de "Data Contracts" para entornos Data Mesh.
+- Evaluar el uso de SLMs cuantizados para reducir costos de inferencia en clientes con alto volumen de fuentes nuevas.
