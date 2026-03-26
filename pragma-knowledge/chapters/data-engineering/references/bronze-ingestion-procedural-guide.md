@@ -308,7 +308,7 @@ El agente opera bajo el siguiente modelo de severidad definido en la política d
 | Estructural | Cumplimiento de tipos y columnas en contrato YAML | **BLOCK** | Detiene el pipeline. No escribe datos en Bronze. |
 | Semántica (crítica) | Violación de regla de negocio en campo obligatorio | **BLOCK** | Detiene el pipeline. Genera reporte de error. |
 | Semántica (no crítica) | Violación de regla de negocio en campo opcional | **WARN** | Continúa. Registra en log de auditoría. |
-| Temporal | Orden cronológico, frescura, temporal leakage | **AUDIT** | Continúa. Registra en tablero de gobernanza. |
+| Temporal | Orden cronológico, frescura (T < 24h), temporal leakage | **AUDIT** | Continúa. Registra en tablero de gobernanza. |
 | Distribucional | PSI > 0.2 o KS p-value < 0.05 | **WARN** | Continúa. Alerta al Data Engineer. |
 | Sintáctica del código | Logprob promedio < -2.0 en segmento generado | **REFLECTION** | Activa ciclo de auto-corrección del agente. |
 

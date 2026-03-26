@@ -103,7 +103,7 @@ A diferencia del paradigma ReAct (reactivo, paso a paso), este agente utiliza el
 
 ### Pasos del Flujo
 
-1. **Planificación Inicial (Pre-Act):** El agente recibe todas las entradas y genera un plan de ejecución completo con N pasos secuenciales, estimando la complejidad de cada fase antes de ejecutar ninguna acción.
+1. **Planificación Inicial (Pre-Act):** El agente recibe todas las entradas y genera un plan de ejecución completo con n+1 pasos secuenciales, estimando la complejidad de cada fase antes de ejecutar ninguna acción.
 
 2. **Reconocimiento de Fuente:** El agente lee la muestra del archivo y genera el Perfil Técnico: formato, encoding, delimitadores, estructura de particionamiento, nivel de anidamiento.
 
@@ -117,7 +117,7 @@ A diferencia del paradigma ReAct (reactivo, paso a paso), este agente utiliza el
 5. **Implementación de las 4 Puertas de Calidad MLOps 2.0:**
    - **Estructural (BLOCK):** Cumplimiento de tipos y columnas en el contrato YAML.
    - **Semántica (WARN/BLOCK):** Reglas de negocio (fechas no futuras, precios no negativos, IDs únicos).
-   - **Temporal (AUDIT):** Orden cronológico, frescura de datos, detección de temporal leakage.
+   - **Temporal (AUDIT):** Orden cronológico, frescura de datos (T < 24h), detección de temporal leakage.
    - **Distribucional (WARN):** Métricas KS/PSI contra línea base histórica para detectar Silent Drift.
 
 6. **Validación Sintáctica con Logprobs:** El agente analiza las probabilidades logarítmicas de los tokens generados para identificar segmentos de baja confianza (posibles alucinaciones). Si detecta incertidumbre, activa un ciclo de Reflexión (Reflection) para corregir su propia salida.
