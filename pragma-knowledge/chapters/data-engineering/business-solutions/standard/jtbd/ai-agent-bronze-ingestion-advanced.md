@@ -255,3 +255,12 @@ El **Chapter de Datos** lidera de principio a fin esta solución con los siguien
 - Output — Script de Ingesta Bronze: [[outputs/bronze-ingestion-script.md]]
 - Output — Data Dictionary: [[outputs/data-dictionary.md]]
 - Output — Suite de Tests de Calidad: [[outputs/data-quality-test-suite.md]]
+
+## Notas
+- Roles y permisos IAM
+- Política de ciclo de vida y retención de datos
+- Encriptación de datos en bronze (Reposo y tránsito)
+- Definir estrategia de auditoría operacional
+- Manejo de formatos de tablas abiertas a partir de bronze
+- Estructura de manejo de Arquitectura hexagonal
+- Estructura de Seguridad (Plano de datos e infra)
